@@ -8,9 +8,9 @@ import lombok.ToString;
 
 import java.util.*;
 
+@Singleton
 public class HistoricalServiceImpl implements HistoricalService {
 
-    @PostConstruct
     public void init() {
         System.out.println("************* " + this.hashCode() + "  **************");
     }

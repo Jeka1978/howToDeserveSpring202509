@@ -1,5 +1,6 @@
 package com.borisov.howtodeservespring;
 
+import com.borisov.howtodeservespring.infra.InjectProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

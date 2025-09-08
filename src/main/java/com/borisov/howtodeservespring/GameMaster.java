@@ -1,6 +1,7 @@
 package com.borisov.howtodeservespring;
 
 
+import com.borisov.howtodeservespring.infra.InjectByType;
 
 public class GameMaster {
 

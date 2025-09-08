@@ -1,8 +1,11 @@
 package com.borisov.howtodeservespring;
 
 
+import com.borisov.howtodeservespring.infra.InjectByType;
+
 public class StatisticalSpider extends AbstractSpider {
 
+    @InjectByType
     private HistoricalService historicalService;
 
     @Override

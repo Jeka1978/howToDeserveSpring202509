@@ -1,8 +1,6 @@
-package com.borisov.howtodeservespring;
+package com.borisov.howtodeservespring.infra;
 
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 

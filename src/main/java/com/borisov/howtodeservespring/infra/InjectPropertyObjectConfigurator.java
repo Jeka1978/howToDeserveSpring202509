@@ -1,8 +1,7 @@
-package com.borisov.howtodeservespring;
+package com.borisov.howtodeservespring.infra;
 
 import lombok.SneakyThrows;
 import org.reflections.ReflectionUtils;
-import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

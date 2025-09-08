@@ -1,4 +1,4 @@
-package com.borisov.howtodeservespring;
+package com.borisov.howtodeservespring.infra;
 
 import lombok.SneakyThrows;
 
