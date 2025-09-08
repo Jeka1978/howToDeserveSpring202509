@@ -9,13 +9,14 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
 
-public class InjectPropertyObjectConfigurator {
+public class InjectPropertyObjectConfigurator implements ObjectConfigurator {
 
 
     private Properties properties = loadProperties();
 
 
     @SneakyThrows
+    @Override
     public void configure(Object o) {
         Set<Field> allFields = ReflectionUtils.getAllFields(o.getClass());
 

@@ -2,7 +2,7 @@ package com.borisov.howtodeservespring;
 
 public interface Spider {
 
-    RPSEnum fight();     // Метод для боя (камень, ножницы, бумага)
+    RPSEnum fight(Spider opponent, int battleId);   // Метод для боя (камень, ножницы, бумага)
 
     boolean isAlive();   // Проверка, жив ли паук
 

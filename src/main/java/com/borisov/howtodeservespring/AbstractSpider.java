@@ -21,4 +21,6 @@ public abstract class AbstractSpider implements Spider {
     public void loseLife() {
         if (lives > 0) lives--;
     }
+
+
 }

@@ -1,15 +1,18 @@
 package com.borisov.howtodeservespring;
 
 
+
 public class GameMaster {
 
-    private Spider spider1 = ObjectFactory.getInstance().createObject(PaperSpider.class);
-
-    private Spider spider2 = ObjectFactory.getInstance().createObject(StoneSpider.class);
-    ;
+    @InjectByType
+    private StatisticalSpider spider1;
 
 
-//    private HistoricalService historicalService;
+    @InjectByType
+    private PaperSpider spider2;
+
+    @InjectByType
+    private HistoricalService historicalService;
 
     private int battleId = 0;  // Счётчик боёв
 
@@ -19,11 +22,16 @@ public class GameMaster {
         System.out.println("Начинаем бой №" + battleId + " между " + spider1.getClass().getSimpleName() + " и " + spider2.getClass().getSimpleName() + "!");
 
         while (spider1.isAlive() && spider2.isAlive()) {
-            RPSEnum move1 = spider1.fight();  // Передаём оппонента и battleId
-            RPSEnum move2 = spider2.fight();  // Передаём оппонента и battleId
+            RPSEnum move1 = spider1.fight(spider2, battleId);  // Передаём оппонента и battleId
+            RPSEnum move2 = spider2.fight(spider1, battleId);  // Передаём оппонента и battleId
 
             // Сохраняем историю хода для каждого паука
-
+          /*  historicalService.saveHistory(battleId, HistoricalServiceImpl.Move.builder()
+                    .player1Id(spider1.hashCode())
+                    .player1Move(move1)
+                    .player2Id(spider2.hashCode())
+                    .player2Move(move2)
+                    .build());*/
             System.out.println("Ходы");
             System.out.println("----");
             System.out.printf("%10s : %-15s\n",

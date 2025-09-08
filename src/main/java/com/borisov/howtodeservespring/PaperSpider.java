@@ -8,7 +8,7 @@ public class PaperSpider extends AbstractSpider {
 
 
     @Override
-    public RPSEnum fight() {
+    public RPSEnum fight(Spider opponent, int battleId) {
         return RPSEnum.PAPER;
     }
 }
