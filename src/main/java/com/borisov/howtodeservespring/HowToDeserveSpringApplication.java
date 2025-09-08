@@ -7,6 +7,7 @@ public class HowToDeserveSpringApplication {
 
     public static void main(String[] args) {
 
+        new GameMaster().fight();
     }
 
 }
