@@ -1,4 +1,5 @@
 package com.borisov.howtodeservespring;
 
-public class RPSEnum {
+public enum RPSEnum {
+    ROCK, SCISSORS, PAPER
 }
