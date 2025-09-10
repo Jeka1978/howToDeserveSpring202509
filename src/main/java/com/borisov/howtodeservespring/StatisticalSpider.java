@@ -2,13 +2,18 @@ package com.borisov.howtodeservespring;
 
 
 import com.borisov.howtodeservespring.infra.InjectByType;
+import com.borisov.howtodeservespring.infra.Log;
 
 public class StatisticalSpider extends AbstractSpider {
+
+    private String name="Vasilli 2";
 
     @InjectByType
     private HistoricalService historicalService;
 
     @Override
+
+    @Log("name")
     public RPSEnum fight(Spider opponent, int battleId) {
         // Получаем общую статистику оппонента по всем боям
         HistoricalServiceImpl.SpiderStatistics opponentStats = historicalService.getSpiderStatistics(opponent.hashCode());

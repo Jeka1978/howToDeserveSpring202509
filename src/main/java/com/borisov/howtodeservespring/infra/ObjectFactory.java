@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
+import org.springframework.scheduling.annotation.Async;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -29,11 +30,14 @@ public class ObjectFactory {
     }
 
     @SneakyThrows
+
+
     public <T> T createObject(Class<T> type) {
 
         var instance = create(type);
         configure(instance);
         runInitMethods(instance);
+        //
         return instance;
     }
 
