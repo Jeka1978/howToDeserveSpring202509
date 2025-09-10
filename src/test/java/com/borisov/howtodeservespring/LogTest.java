@@ -23,6 +23,7 @@ public class LogTest {
             System.out.println("I'm meta spider with N lives");
         }
 
+        private String fieldToLog = "Log me please";
         @Override
         public void tryLog() {
             System.out.println("Super logging method, try enable it");
@@ -31,8 +32,20 @@ public class LogTest {
 
     public static interface MyClassWithLogAnnotationInterface {
         //TODO Попробуйте реализовать логирование, триггером к которому является аннотация над методом интерфейса
-        //Место для вашей аннотации
+        // Напишите тесты на это
+        // Подумайте разные варианты тестирования слоёв где реализована логика обрабатывающая эту аннотацию
+        //Место для вашей аннотации. Например @Log("fieldToLog"), где fieldName имя поля которое нужно напечатать
         void tryLog();
+    }
+
+    @Test
+    void should_not_log_field_from_log_annotation() {
+        //TODO Подумайте о краевых случаях @Log
+    }
+
+    @Test
+    void should_log_field_from_log_annotation() {
+       //TODO напишите логику теста проверящую работу @Log с минимальным количеством вовлечённых компонент проекта
     }
 
     @Test
