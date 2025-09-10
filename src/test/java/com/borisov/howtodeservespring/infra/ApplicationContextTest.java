@@ -77,6 +77,7 @@ class ApplicationContextTest {
     void should_get_singleton_object() {
         when(objectFactory.createObject(ApContextTestSingletonObject.class)).thenAnswer(invocationOnMock -> new ApContextTestSingletonObject());
 
+        //expect
         ApContextTestSingletonObject    object  = applicationContext.getObject(ApContextTestSingletonObject.class);
         ApContextTestSingletonObject    object2 = applicationContext.getObject(ApContextTestSingletonObject.class);
         ApContextTestSingletonInterface object3 = applicationContext.getObject(ApContextTestSingletonInterface.class);
