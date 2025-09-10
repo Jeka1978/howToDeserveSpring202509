@@ -27,12 +27,12 @@ public class GameMaster {
             RPSEnum move2 = spider2.fight(spider1, battleId);  // Передаём оппонента и battleId
 
             // Сохраняем историю хода для каждого паука
-          /*  historicalService.saveHistory(battleId, HistoricalServiceImpl.Move.builder()
+            historicalService.saveHistory(battleId, HistoricalServiceImpl.Move.builder()
                     .player1Id(spider1.hashCode())
                     .player1Move(move1)
                     .player2Id(spider2.hashCode())
                     .player2Move(move2)
-                    .build());*/
+                    .build());
             System.out.println("Ходы");
             System.out.println("----");
             System.out.printf("%10s : %-15s\n",
