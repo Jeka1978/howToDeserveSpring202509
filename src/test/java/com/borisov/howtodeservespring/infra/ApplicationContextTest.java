@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ApplicationContextTest {
     @InjectMocks ApplicationContext applicationContext;
-    @Spy         Reflections        reflections = new Reflections("com.borisov.howtodeservespring");
+    @Spy         Reflections        reflections = new Reflections("com.borisov.howtodeservespring", new SubTypesScanner(),new ResourcesScanner());
     @Mock        ObjectFactory      objectFactory;
 
 
@@ -39,7 +41,7 @@ class ApplicationContextTest {
 
     }
 
-    private class InjectedTestClass {
+    public class InjectedTestClass {
     }
 
     @Test

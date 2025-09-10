@@ -2,12 +2,16 @@ package com.borisov.howtodeservespring.infra;
 
 import com.borisov.howtodeservespring.Singleton;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@RequiredArgsConstructor
 public class ApplicationContext {
     @Getter
     private final Reflections scanner;
