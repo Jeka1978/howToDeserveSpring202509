@@ -1,53 +1,47 @@
 package com.borisov.howtodeservespring.infra;
 
-
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ObjectFactory {
-    private List<ObjectConfigurator> objectConfigurators = new ArrayList<>();
-    private final Reflections scanner;
+    private final List<ObjectConfigurator> objectConfigurators;
+    private final Reflections              scanner;
+    private final ApplicationContext       applicationContext;
 
     @SneakyThrows
-    public ObjectFactory(ApplicationContext appcontext) {
-        this.scanner = appcontext.getScanner();
-        Set<Class<? extends ObjectConfigurator>> configuratorClasses = scanner.getSubTypesOf(ObjectConfigurator.class);
-        for (Class<? extends ObjectConfigurator> configuratorClass : configuratorClasses) {
-            if (configuratorClass.getModifiers() != Modifier.ABSTRACT) {
-                objectConfigurators.add(configuratorClass.getDeclaredConstructor().newInstance());
-            }
-        }
+    public ObjectFactory(ApplicationContext context) {
+        this.applicationContext = context;
+        this.scanner            = context.getScanner();
+
+        this.objectConfigurators = scanner.getSubTypesOf(ObjectConfigurator.class).stream()
+                                          .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
+                                          .map(this::instantiate)
+                                          .peek(config -> config.setApplicationContext(applicationContext))
+                                          .collect(Collectors.toList());
     }
 
     @SneakyThrows
     public <T> T createObject(Class<T> type) {
-
-
         if (type.isInterface()) {
-            Set<Class<? extends T>> classes = scanner.getSubTypesOf(type);
-            if (classes.isEmpty() || classes.size() > 1) {
-                throw new IllegalStateException("Zero ore More than one type of " + type);
+            var implementations = scanner.getSubTypesOf(type);
+            if (implementations.size() != 1) {
+                throw new IllegalStateException("Expected single implementation of " + type + ", found: " + implementations.size());
             }
-            type = (Class<T>) classes.iterator().next();
+            type = (Class<T>) implementations.iterator().next();
         }
 
-        // check interface or class (if interface search root package for impl, if 0 or more than 1 found ->exception
-        //create Object from impl
-        // configure this object with our configurators
-        //return configured object
+        var instance = type.getDeclaredConstructor().newInstance();
+        objectConfigurators.forEach(config -> config.configure(instance));
+        return instance;
+    }
 
-        T t = type.getDeclaredConstructor().newInstance();
-
-
-        objectConfigurators.forEach(configurator -> configurator.configure(t));
-
-
-        return t;
+    @SneakyThrows
+    private <T> T instantiate(Class<T> clazz) {
+        return clazz.getDeclaredConstructor().newInstance();
     }
 }

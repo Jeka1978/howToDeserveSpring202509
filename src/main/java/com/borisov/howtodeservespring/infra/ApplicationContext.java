@@ -1,26 +1,45 @@
 package com.borisov.howtodeservespring.infra;
 
-
-import com.borisov.howtodeservespring.GameMaster;
-import lombok.RequiredArgsConstructor;
+import com.borisov.howtodeservespring.Singleton;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import org.reflections.Reflections;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-@RequiredArgsConstructor
 public class ApplicationContext {
+    @Getter
     private final Reflections scanner;
-    private final ObjectFactory objectFactory;
+    private final ObjectFactory factory;
+    private final Map<Class<?>, Object> singletonCache = new ConcurrentHashMap<>();
 
-    public ApplicationContext(Reflections scanner) {
-        this.scanner = scanner;
-        objectFactory = new ObjectFactory(this);
-
+    public ApplicationContext(String... basePackages) {
+        this.scanner = new Reflections((Object[]) basePackages);
+        this.factory = new ObjectFactory(this);
     }
 
-    public <T> T getObject(Class<T> gameMasterClass) {
-        return null;
+
+    @SuppressWarnings("unchecked")
+    public <T> T getObject(Class<T> type) {
+        Class<?> concreteType = resolveConcreteType(type);
+        boolean isSingleton = concreteType.isAnnotationPresent(Singleton.class);
+
+        if (isSingleton) {
+            return (T) singletonCache.computeIfAbsent(type, key -> factory.createObject((Class<T>) concreteType));
+        } else {
+            return factory.createObject((Class<T>) concreteType);
+        }
     }
 
-    public Reflections getScanner() {
-        return scanner;
+    @SneakyThrows
+    private Class<?> resolveConcreteType(Class<?> type) {
+        if (!type.isInterface()) return type;
+
+        Set<?> impls = scanner.getSubTypesOf((Class<Object>) type);
+        if (impls.size() != 1) {
+            throw new IllegalStateException("Expected exactly one implementation of " + type + ", found: " + impls.size());
+        }
+        return (Class<?>) impls.iterator().next();
     }
 }

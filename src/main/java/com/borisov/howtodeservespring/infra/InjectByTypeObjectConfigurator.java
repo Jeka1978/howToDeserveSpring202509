@@ -2,6 +2,7 @@ package com.borisov.howtodeservespring.infra;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.reflections.ReflectionUtils;
 
@@ -11,7 +12,10 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class InjectByTypeObjectConfigurator implements ObjectConfigurator {
-    ApplicationContext applicationContext;
+
+
+    @Setter
+    private ApplicationContext applicationContext;
 
     @SneakyThrows
     @Override
