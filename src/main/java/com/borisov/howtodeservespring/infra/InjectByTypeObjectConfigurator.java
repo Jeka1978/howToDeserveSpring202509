@@ -11,7 +11,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class InjectByTypeObjectConfigurator implements ObjectConfigurator {
-
+    ApplicationContext applicationContext;
 
     @SneakyThrows
     @Override
@@ -21,7 +21,7 @@ public class InjectByTypeObjectConfigurator implements ObjectConfigurator {
         for (Field field : allFields) {
             InjectByType annotation = field.getAnnotation(InjectByType.class);
             if (annotation != null) {
-                Object dependency = ObjectFactory.getInstance().createObject(field.getType());
+                Object dependency = applicationContext.getObject(field.getType());
                 if (dependency != null) {
                     field.setAccessible(true);
                     field.set(target, dependency);

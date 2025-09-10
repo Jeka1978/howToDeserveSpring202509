@@ -1,6 +1,7 @@
 package com.borisov.howtodeservespring.infra;
 
 
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
@@ -10,21 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 public class ObjectFactory {
-
-
     private List<ObjectConfigurator> objectConfigurators = new ArrayList<>();
-
-
-    private Reflections scanner = new Reflections("com.borisov.howtodeservespring");
-
-    private static final ObjectFactory INSTANCE = new ObjectFactory();
-
-    public static ObjectFactory getInstance() {
-        return INSTANCE;
-    }
+    private final Reflections scanner;
 
     @SneakyThrows
-    public ObjectFactory() {
+    public ObjectFactory(ApplicationContext appcontext) {
+        this.scanner = appcontext.getScanner();
         Set<Class<? extends ObjectConfigurator>> configuratorClasses = scanner.getSubTypesOf(ObjectConfigurator.class);
         for (Class<? extends ObjectConfigurator> configuratorClass : configuratorClasses) {
             if (configuratorClass.getModifiers() != Modifier.ABSTRACT) {
