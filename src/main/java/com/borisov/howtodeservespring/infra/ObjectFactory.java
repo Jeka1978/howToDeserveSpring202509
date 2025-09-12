@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class ObjectFactory {
     private final List<ObjectConfigurator> objectConfigurators;
+    private final List<ProxyConfigurator> proxyConfigurators;
     private final Reflections              scanner;
     private final ApplicationContext       applicationContext;
 
@@ -27,6 +28,13 @@ public class ObjectFactory {
                                           .map(this::instantiate)
                                           .peek(config -> config.setApplicationContext(applicationContext))
                                           .collect(Collectors.toList());
+
+
+        this.proxyConfigurators = scanner.getSubTypesOf(ProxyConfigurator.class).stream()
+                                         .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
+                                         .map(this::instantiate)
+                                         .peek(config -> config.setApplicationContext(applicationContext))
+                                         .collect(Collectors.toList());
     }
 
     @SneakyThrows
@@ -34,10 +42,25 @@ public class ObjectFactory {
 
     public <T> T createObject(Class<T> type) {
 
+
+
+
         var instance = create(type);
+
         configure(instance);
+
         runInitMethods(instance);
-        //
+
+        instance = replaceWithProxy(type, instance);
+
+
+        return instance;
+    }
+
+    private <T> T replaceWithProxy(Class<T> type, T instance) {
+        for (ProxyConfigurator proxyConfigurator : proxyConfigurators) {
+            instance = proxyConfigurator.replaceWithProxy(instance, type);
+        }
         return instance;
     }
 

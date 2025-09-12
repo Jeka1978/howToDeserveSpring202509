@@ -2,6 +2,8 @@ package com.borisov.howtodeservespring;
 
 
 import com.borisov.howtodeservespring.infra.InjectByType;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 public class GameMaster {
 
@@ -17,6 +19,7 @@ public class GameMaster {
 
     private int battleId = 0;  // Счётчик боёв
 
+    @Async
     public void fight() {
         // Увеличиваем ID боя для каждого нового боя
         battleId++;
