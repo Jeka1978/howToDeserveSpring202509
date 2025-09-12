@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class ObjectFactory {
     private final List<ObjectConfigurator> objectConfigurators;
-    private final List<ProxyConfigurator> proxyConfigurators;
+    private final List<ProxyConfigurator>  proxyConfigurators;
     private final Reflections              scanner;
     private final ApplicationContext       applicationContext;
 
@@ -43,23 +43,21 @@ public class ObjectFactory {
     public <T> T createObject(Class<T> type) {
 
 
-
-
         var instance = create(type);
 
         configure(instance);
 
         runInitMethods(instance);
 
-        instance = replaceWithProxy(type, instance);
+        instance = replaceWithProxy(type, instance, instance);
 
 
         return instance;
     }
 
-    private <T> T replaceWithProxy(Class<T> type, T instance) {
+    private <T> T replaceWithProxy(Class<T> type, T instance, final Object originalObject) {
         for (ProxyConfigurator proxyConfigurator : proxyConfigurators) {
-            instance = proxyConfigurator.replaceWithProxy(instance, type);
+            instance = proxyConfigurator.replaceWithProxy(instance, type, originalObject);
         }
         return instance;
     }
@@ -67,7 +65,7 @@ public class ObjectFactory {
     @SneakyThrows
     private <T> void runInitMethods(T instance) {
         ReflectionUtils.getAllMethods(instance.getClass()).forEach(method -> {
-            if(method.isAnnotationPresent(PostConstruct.class)){
+            if (method.isAnnotationPresent(PostConstruct.class)) {
                 method.setAccessible(true);
                 org.springframework.util.ReflectionUtils.invokeMethod(method, instance);
             }

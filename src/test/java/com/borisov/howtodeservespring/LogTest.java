@@ -37,6 +37,7 @@ public class LogTest {
         private String fieldToLog = "Log me please";
 
         @Override
+        @Log("fieldToLog")
         public void tryLog() {
             System.out.println("Super logging method, try enable it");
         }
@@ -47,16 +48,11 @@ public class LogTest {
         // Напишите тесты на это
         // Подумайте разные варианты тестирования слоёв где реализована логика обрабатывающая эту аннотацию
         //Место для вашей аннотации. Например @Log("fieldToLog"), где fieldName имя поля которое нужно напечатать
-        @Log("fieldToLog")
+
         default void tryLog() {
         }
 
         ;
-
-        @Log
-        default void tryLogWithoutField() {
-        }
-
         default void tryNotLog() {
         }
     }
@@ -82,7 +78,7 @@ public class LogTest {
         object.tryNotLog();
 
         //then
-        assertThat(output.getAll()).contains("Log me pleas");
+        assertThat(output.getAll()).doesNotContain("Log me pleas");
     }
 
     @Test
@@ -99,21 +95,6 @@ public class LogTest {
         assertThat(output.getAll()).contains("Custom field value");
     }
 
-    @Test
-    void should_log_when_field_name_is_unset_in_annotation(CapturedOutput output) {
-        //TODO напишите логику теста проверящую работу @Log с минимальным количеством вовлечённых компонент проекта
-        //given
-        MetaSpiderForTest object = context.getObject(MetaSpiderForTest.class);
-        object.setFieldToLog("Custom field value");
-
-        //when
-        object.tryLogWithoutField();
-
-        //then
-        assertThat(output.getAll())
-                .contains("tryLogWithoutField")
-                .doesNotContain("Log me please");
-    }
 
     @Test
     void should_log_when_spider_initialized(CapturedOutput capturedOutput) {

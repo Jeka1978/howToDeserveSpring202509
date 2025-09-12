@@ -1,62 +1,64 @@
 package com.borisov.howtodeservespring.infra;
 
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LogProxyConfigurator implements ProxyConfigurator {
+
     @Override
-    public <T> T replaceWithProxy(T o, Class<T> type) {
+    @SuppressWarnings("unchecked")
+    public <T> T replaceWithProxy(T currentObject, Class<T> originalClass, Object originalObject) {
+        if (getLogMethods(originalClass).isEmpty()) return currentObject;
 
-        List<Method> logMethods = getMethodsAnnotatedWithLog(type);
-        if(logMethods.isEmpty()) return o;
-
-        Proxy.newProxyInstance(
-                type.getClassLoader(), ClassUtils.getAllInterfaces(type), new InvocationHandler() {
-                    @Override
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        return null;
-                    }
-                }
-        )
-
-        return null;
-    }
-
-
-
-    public List<Method> getMethodsAnnotatedWithLog(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredMethods())
-                     .filter(method -> method.isAnnotationPresent(Log.class))
-                     .collect(Collectors.toList());
-    }
-
-    // Альтернативный вариант для получения методов из всех родительских классов
-    public List<Method> getAllMethodsAnnotatedWithLog(Class<?> clazz) {
-        return Arrays.stream(clazz.getMethods()) // getMethods() включает унаследованные методы
-                     .filter(method -> method.isAnnotationPresent(Log.class))
-                     .collect(Collectors.toList());
-    }
-
-    // Вариант с использованием рефлексии для поиска во всей иерархии классов
-    public List<Method> getMethodsWithLogAnnotationFromHierarchy(Class<?> clazz) {
-        List<Method> methods = new ArrayList<>();
-        Class<?> currentClass = clazz;
-
-        while (currentClass != null) {
-            Arrays.stream(currentClass.getDeclaredMethods())
-                  .filter(method -> method.isAnnotationPresent(Log.class))
-                  .forEach(methods::add);
-            currentClass = currentClass.getSuperclass();
+        if (!Modifier.isFinal(originalClass.getModifiers())) {
+            // CGLIB Proxy - приоритетный выбор для не-final классов
+            return (T) Enhancer.create(originalClass,
+                                       createMethodInterceptor(currentObject, originalClass, originalObject));
         }
 
-        return methods;
+        Class<?>[] interfaces = ClassUtils.getAllInterfacesForClass(originalClass);
+        if (interfaces.length > 0) {
+            // JDK Proxy для final классов с интерфейсами
+            return (T) Proxy.newProxyInstance(
+                    originalClass.getClassLoader(),
+                    interfaces,
+                    createInvocationHandler(currentObject, originalClass, originalObject));
+        }
+
+        throw new IllegalArgumentException(
+                "Зачем вы издеваетесь! Я не буду инструментировать ваш класс, а другого выбора вы мне не оставляете. " +
+                        "Класс " + originalClass.getSimpleName() + " является final и не имеет интерфейсов.");
+    }
+
+    private InvocationHandler createInvocationHandler(Object currentObject, Class<?> originalClass, Object originalObject) {
+        return (proxy, method, args) -> {
+            processLogAnnotation(method, originalClass, originalObject);
+            return method.invoke(currentObject, args);
+        };
+    }
+
+    private MethodInterceptor createMethodInterceptor(Object currentObject, Class<?> originalClass, Object originalObject) {
+        return (obj, method, args, methodProxy) -> {
+            processLogAnnotation(method, originalClass, originalObject);
+            return method.invoke(currentObject, args);
+        };
+    }
+
+    private void processLogAnnotation(Method method, Class<?> originalClass, Object originalObject) throws NoSuchMethodException {
+        Log annotation = originalClass.getMethod(method.getName(), method.getParameterTypes())
+                                      .getAnnotation(Log.class);
+        if (annotation != null) {
+            FieldPrinterUtils.printFieldsWithValues(annotation.value(), originalObject);
+        }
+    }
+
+    private List<Method> getLogMethods(Class<?> clazz) {
+        return Arrays.stream(clazz.getMethods())
+                     .filter(method -> method.isAnnotationPresent(Log.class))
+                     .toList();
     }
 }

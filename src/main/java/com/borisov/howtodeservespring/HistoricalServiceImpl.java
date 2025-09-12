@@ -1,6 +1,7 @@
 package com.borisov.howtodeservespring;
 
 
+import com.borisov.howtodeservespring.infra.Log;
 import jakarta.annotation.PostConstruct;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import java.util.*;
 
 @Singleton
 public class HistoricalServiceImpl implements HistoricalService {
+
+    private String name = "check!";
 
     public void init() {
         System.out.println("************* " + this.hashCode() + "  **************");
@@ -61,6 +64,7 @@ public class HistoricalServiceImpl implements HistoricalService {
 
     // Сохранение истории боя и обновление статистики пауков
     @Override
+    @Log("name")
     public void saveHistory(int battleId, Move move) {
         // Сохраняем ходы для данного боя
         battleHistory.computeIfAbsent(battleId, id -> new ArrayList<>()).add(move);
