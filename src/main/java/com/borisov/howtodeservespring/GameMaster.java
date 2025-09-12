@@ -2,10 +2,17 @@ package com.borisov.howtodeservespring;
 
 
 import com.borisov.howtodeservespring.infra.InjectByType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+@Component
+@Lazy
 public class GameMaster {
+
+    @Value("${spring.default.life}")
+    private String appName;
 
     @InjectByType
     private StatisticalSpider spider1;

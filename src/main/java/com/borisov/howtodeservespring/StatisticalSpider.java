@@ -3,7 +3,9 @@ package com.borisov.howtodeservespring;
 
 import com.borisov.howtodeservespring.infra.InjectByType;
 import com.borisov.howtodeservespring.infra.Log;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StatisticalSpider extends AbstractSpider {
 
     private String name="Vasilli 2";

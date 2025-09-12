@@ -1,13 +1,27 @@
 package com.borisov.howtodeservespring.infra;
 
+import lombok.Setter;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class LogProxyConfigurator implements ProxyConfigurator {
+//@Component
+public class LogProxyConfigurator implements ProxyConfigurator, BeanPostProcessor {
+
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return replaceWithProxy(null,null,bean);
+    }
 
     @Override
     @SuppressWarnings("unchecked")

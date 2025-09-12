@@ -2,17 +2,26 @@ package com.borisov.howtodeservespring.infra;
 
 import lombok.SneakyThrows;
 import org.reflections.ReflectionUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
 
-public class InjectPropertyObjectConfigurator implements ObjectConfigurator {
+@Configuration
+public class InjectPropertyObjectConfigurator implements ObjectConfigurator, BeanPostProcessor {
 
 
     private Properties properties = loadProperties();
 
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        configure(bean);
+        return bean;
+    }
 
     @SneakyThrows
     @Override

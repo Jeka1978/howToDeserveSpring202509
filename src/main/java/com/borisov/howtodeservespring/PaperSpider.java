@@ -1,7 +1,9 @@
 package com.borisov.howtodeservespring;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PaperSpider extends AbstractSpider {
 
 

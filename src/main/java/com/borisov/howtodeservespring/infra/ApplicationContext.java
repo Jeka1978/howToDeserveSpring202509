@@ -21,6 +21,11 @@ public class ApplicationContext {
     public ApplicationContext(String... basePackages) {
         this.scanner = new Reflections((Object[]) basePackages);
         this.factory = new ObjectFactory(this);
+
+        Set<Class<?>> singletons = scanner.getTypesAnnotatedWith(Singleton.class);
+        for (Class<?> singleton : singletons) {
+            getObject(singleton);
+        }
     }
 
 
