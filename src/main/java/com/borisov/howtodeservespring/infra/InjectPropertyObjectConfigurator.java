@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
 
-@Configuration
 public class InjectPropertyObjectConfigurator implements ObjectConfigurator, BeanPostProcessor {
 
 
@@ -41,7 +40,10 @@ public class InjectPropertyObjectConfigurator implements ObjectConfigurator, Bea
 
     private Object convertValue(String value, Class<?> targetType) {
         if (targetType == String.class) return value;
-        if (targetType == Integer.class || targetType == int.class) return Integer.parseInt(value);
+        if (targetType == Integer.class || targetType == int.class) {
+            if(value == null) return 0;
+            return Integer.parseInt(value);
+        }
         if (targetType == Double.class || targetType == double.class) return Double.parseDouble(value);
         throw new IllegalArgumentException("Unsupported type: " + targetType);
 
