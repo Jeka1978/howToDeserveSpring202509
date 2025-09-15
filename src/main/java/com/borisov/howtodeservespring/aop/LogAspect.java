@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class LogAspect {
 
+
     @Around("@annotation(log)")
     @SneakyThrows
     public Object aroundLogMethods(ProceedingJoinPoint pjp, Log log) {

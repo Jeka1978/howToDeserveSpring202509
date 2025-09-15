@@ -1,5 +1,8 @@
 package com.borisov.howtodeservespring;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class StoneSpider extends AbstractSpider {
 
 
