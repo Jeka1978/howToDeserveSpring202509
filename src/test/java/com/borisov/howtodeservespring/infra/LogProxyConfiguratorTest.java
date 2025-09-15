@@ -63,6 +63,7 @@ class LogProxyConfiguratorTest {
 
         //then
         assertThat(Proxy.isProxyClass(o.getClass()))
+                .as("По возможности делаем DynamicProxy для быстродействия")
                 .isTrue();
     }
 

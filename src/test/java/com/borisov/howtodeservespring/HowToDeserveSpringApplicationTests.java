@@ -1,6 +1,5 @@
 package com.borisov.howtodeservespring;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -8,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class HowToDeserveSpringApplicationTests {
 
     @Test
-    @Disabled("Wait")
     void contextLoads() {
     }
 
