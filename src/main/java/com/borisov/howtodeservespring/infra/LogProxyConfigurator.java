@@ -2,6 +2,7 @@ package com.borisov.howtodeservespring.infra;
 
 import lombok.Setter;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
@@ -12,21 +13,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //@Component
 public class LogProxyConfigurator implements ProxyConfigurator, BeanPostProcessor {
 
+    private Map<String,Object> beans = new HashMap<>();
+
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        beans.put(beanName, bean);
+        return bean;
+    }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return replaceWithProxy(null,null,bean);
+        return replaceWithProxy(bean,beans.get(beanName).getClass(),beans.get(beanName));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T replaceWithProxy(T currentObject, Class<T> originalClass, Object originalObject) {
-        if (getLogMethods(originalClass).isEmpty()) return currentObject;
+    public <T> T replaceWithProxy(T currentObject, Class originalClass, Object originalObject) {
+        if (getLogMethods((Class<?>) originalClass).isEmpty()) return currentObject;
 
         if (!Modifier.isFinal(originalClass.getModifiers())) {
             // CGLIB Proxy - приоритетный выбор для не-final классов
