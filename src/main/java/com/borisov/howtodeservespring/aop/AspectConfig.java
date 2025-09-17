@@ -1,6 +1,9 @@
 package com.borisov.howtodeservespring.aop;
 
+import com.borisov.howtodeservespring.infra.PreDestroyBFPP;
+import jakarta.annotation.PostConstruct;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.DynamicMethodMatcherPointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -9,8 +12,15 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy
 public class AspectConfig {
 
+
+    @PostConstruct
+    public void postConstruct() {
+        System.out.println(123);
+    }
+
+
     @Bean
-    public RessurectionSpidersDetectorPointcut pointcut() {
+    public DynamicMethodMatcherPointcut pointcut() {
         return new RessurectionSpidersDetectorPointcut();
     }
 
