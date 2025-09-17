@@ -42,9 +42,9 @@ public class PredestroyProhibitedTest {
                 .run(ctx -> {
                     assertThat(ctx)
                             .as("Should fail when @PreDestroy found")
-                            .hasFailed();
-//                            .isInstanceOf(FailException.class)
-
+                            .hasFailed()
+                            .getFailure()
+                            .isInstanceOf(FailException.class);
                 });
     }
 
