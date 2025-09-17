@@ -10,7 +10,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
-@EnableAspectJAutoProxy
 public class HowToDeserveSpringApplication {
 
 

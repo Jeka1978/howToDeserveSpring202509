@@ -1,5 +1,7 @@
 package com.borisov.howtodeservespring;
 
+import com.borisov.howtodeservespring.aop.AspectConfig;
+import com.borisov.howtodeservespring.aop.LogAspect;
 import com.borisov.howtodeservespring.infra.Log;
 import com.borisov.howtodeservespring.infra.LogProxyConfigurator;
 import com.borisov.howtodeservespring.infra.MainConfiguration;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -16,11 +19,17 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith({
         OutputCaptureExtension.class
 })
-@SpringJUnitConfig({MainConfiguration.class, LogTest.class})
+@SpringJUnitConfig({
+        MainConfiguration.class,
+        LogTest.class,
+        AspectConfig.class,
+        LogAspect.class
+})
 @TestConfiguration
 public class LogTest {
     @Autowired org.springframework.context.ApplicationContext context;
@@ -62,7 +71,9 @@ public class LogTest {
 
     @Test
     void should_contain_configurator_in_context() {
-        assertThat(context.getBean(LogProxyConfigurator.class)).isNotNull();
+        assertThrows(
+                NoSuchBeanDefinitionException.class, () -> context.getBean(LogProxyConfigurator.class)
+        );
     }
 
     /*************************************************
@@ -74,7 +85,7 @@ public class LogTest {
     void should_not_log_field_from_log_annotation(CapturedOutput output) {
         //TODO Подумайте о краевых случаях @Log
         //given
-        MetaSpiderForTest object = context.getBean(MetaSpiderForTest.class);
+        MyClassWithLogAnnotationInterface object = context.getBean(MyClassWithLogAnnotationInterface.class);
 
         //when
         object.tryNotLog();
@@ -87,14 +98,14 @@ public class LogTest {
     void should_log_field_from_log_annotation(CapturedOutput output) {
         //TODO напишите логику теста проверящую работу @Log с минимальным количеством вовлечённых компонент проекта
         //given
-        MetaSpiderForTest object = context.getBean(MetaSpiderForTest.class);
-        object.setFieldToLog("Custom field value");
+        MyClassWithLogAnnotationInterface object = context.getBean(MyClassWithLogAnnotationInterface.class);
+//        object.setFieldToLog("Custom field value");
 
         //when
         object.tryLog();
 
         //then
-        assertThat(output.getAll()).contains("Custom field value");
+        assertThat(output.getAll()).contains("Log me please");
     }
 
 
@@ -105,7 +116,7 @@ public class LogTest {
         // 2. А ещё как? (подумайте двух способах и их плюсах и минусах)
         // 3. Как проверить что метод вызвался ровно один раз?
         //when
-        MetaSpiderForTest object = context.getBean(MetaSpiderForTest.class);
+        MyClassWithLogAnnotationInterface object = context.getBean(MyClassWithLogAnnotationInterface.class);
 
         //then
         assertThat(object).isNotNull();
