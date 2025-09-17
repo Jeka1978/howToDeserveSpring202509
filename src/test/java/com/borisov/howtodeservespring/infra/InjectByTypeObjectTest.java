@@ -51,6 +51,7 @@ class InjectByTypeObjectTest {
                 .isNotNull();
     }
 
+    //TODO HomeWork реализуйте впрыскивание полей через соответствующий метод set*
     @Test
     @Disabled("Advanced homework")
     void should_inject_class_by_type_via_setter() {
