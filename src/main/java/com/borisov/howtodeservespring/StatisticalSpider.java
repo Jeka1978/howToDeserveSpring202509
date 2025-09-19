@@ -3,9 +3,11 @@ package com.borisov.howtodeservespring;
 
 import com.borisov.howtodeservespring.infra.InjectByType;
 import com.borisov.howtodeservespring.infra.Log;
+import com.borisov.howtodeservespring.infra.PlayerQualifier;
 import org.springframework.stereotype.Component;
 
 @Component
+@PlayerQualifier(playerName = "Zheka")
 public class StatisticalSpider extends AbstractSpider {
 
     private String name="Vasilli 2";

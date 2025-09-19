@@ -13,6 +13,10 @@ public interface Spider {
     void setLives(int lives); // Установка количества жизней
 
     default String getOwner() {
-        return "default";
+        return null;
+    }
+
+    default void setOwner(String owner) {
+
     }
 }

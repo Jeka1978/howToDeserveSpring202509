@@ -10,10 +10,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public abstract class AbstractSpider implements Spider {
+    public static final String DEFAULT_SPIDER_OWNER = "default";
+    @Getter
+    @Setter
+    private             String owner                = DEFAULT_SPIDER_OWNER;
 
     @PostConstruct
     public void init() {
-        System.out.println("spider type: " +getClass().getSimpleName()+" lives = "+lives);
+        System.out.println("spider type: " + getClass().getSimpleName() + " lives = " + lives);
     }
 
     @InjectProperty("spring.default.life")

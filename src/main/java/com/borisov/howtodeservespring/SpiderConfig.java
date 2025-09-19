@@ -15,10 +15,22 @@ public class SpiderConfig {
     @Autowired
     private List<Spider> allSpiders;
 
+    @Bean
+    public List<Spider> spiders() {
+        return allSpiders.stream()
+                         .filter(spider -> !spider.getOwner().equals(AbstractSpider.DEFAULT_SPIDER_OWNER))
+                         .collect(Collectors.toList());
+    }
+
 
     @Bean
-    public Map<String,Integer> playersTrophyMap(){
+    public Map<String, Integer> playerTrophiesMap() {
         //TODO соберите по метаинформации из @PlayerQualifier пауков в мапу трофеев
-        return null;
+        return spiders().stream()
+                        .collect(Collectors.toMap(
+                                Spider::getOwner,
+                                _ -> 0,
+                                (existing, _) -> existing
+                        ));
     }
 }

@@ -2,7 +2,8 @@ package com.borisov.howtodeservespring;
 
 
 import com.borisov.howtodeservespring.infra.InjectByType;
-import com.borisov.howtodeservespring.infra.Log;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,19 @@ public class GameMaster {
     int battleId = 0;
 
     @InjectByType HistoricalService    historicalService;
+
     @InjectByType List<Spider>         spiders;  // Лист со всеми пауками
+
     @InjectByType Map<String, Integer> playerTrophies;  // Карта с игроками и трофеями
+
+    @PostConstruct
+    public void init() {
+        //TODO  - не работает с пауками которые упакованы в прокси (AOP Log для StatisticalSpider)
+//        for (Spider spider : spiders) {
+//            String s = spider.getClass().getAnnotation(PlayerQualifier.class).playerName();
+//            spider.setOwner(s);
+//        }
+    }
 
     // Метод для запуска игры
     public void fight() {

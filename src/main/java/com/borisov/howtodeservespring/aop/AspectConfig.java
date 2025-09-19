@@ -1,23 +1,16 @@
 package com.borisov.howtodeservespring.aop;
 
-import com.borisov.howtodeservespring.infra.PreDestroyBFPP;
-import jakarta.annotation.PostConstruct;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.DynamicMethodMatcherPointcut;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
 @EnableAspectJAutoProxy
+@ConditionalOnProperty(value = "spider.immortal", havingValue = "true", matchIfMissing = true)
 public class AspectConfig {
-
-
-    @PostConstruct
-    public void postConstruct() {
-        System.out.println(123);
-    }
-
 
     @Bean
     public DynamicMethodMatcherPointcut pointcut() {

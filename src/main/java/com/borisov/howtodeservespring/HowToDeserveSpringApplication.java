@@ -1,14 +1,8 @@
 package com.borisov.howtodeservespring;
 
-import com.borisov.howtodeservespring.infra.ApplicationContext;
-import com.borisov.howtodeservespring.infra.InjectByType;
-import com.borisov.howtodeservespring.infra.ObjectFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.*;
-import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 public class HowToDeserveSpringApplication {
