@@ -10,8 +10,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
-
 @Slf4j
 @Component
 public class PlayerQualifierBPP implements BeanPostProcessor, BeanFactoryPostProcessor {
@@ -23,11 +21,9 @@ public class PlayerQualifierBPP implements BeanPostProcessor, BeanFactoryPostPro
             BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
 
             if (beanDefinition.getSource() instanceof StandardMethodMetadata source) {
-                Method introspectedMethod = source.getIntrospectedMethod();
-                if (introspectedMethod.isAnnotationPresent(PlayerQualifier.class)) {
-                    PlayerQualifier annotation = introspectedMethod.getAnnotation(PlayerQualifier.class);
-                    String          s          = annotation.playerName();
-                    spider.setOwner(s);
+                if (source.getAnnotations().isPresent(PlayerQualifier.class)) {
+                    String playerName = source.getAnnotations().get(PlayerQualifier.class).getString("playerName");
+                    spider.setOwner(playerName);
                 }
             }
 

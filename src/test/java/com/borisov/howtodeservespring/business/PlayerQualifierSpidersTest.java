@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.lang.reflect.Proxy;
@@ -41,6 +40,7 @@ public class PlayerQualifierSpidersTest {
         }
 
         @Bean
+        @PlayerQualifier(playerName = "Override")
         public StoneSpider stoneSpider() {
             return new StoneSpider();
         }
@@ -94,5 +94,14 @@ public class PlayerQualifierSpidersTest {
         Spider bean = applicationContext.getBean("superDuperSpider", Spider.class);
 
         assertThat(bean.getOwner()).isEqualTo("SuperDuperOwner");
+    }
+
+    //TODO почините код чтобы тест работал
+    @Test
+    void should_override_playerqualifier_on_bean_is_priority() {
+        Spider stoneSpider = applicationContext.getBean("stoneSpider", Spider.class);
+
+        assertThat(stoneSpider.getOwner()).isEqualTo("Override");
+
     }
 }
