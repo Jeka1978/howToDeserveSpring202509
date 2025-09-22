@@ -1,1 +1,2 @@
 org.springframework.boot.diagnostics.FailureAnalyzer = com.borisov.howtodeservespring.infra.PredestroyFailAnalyser
+org.springframework.boot.env.EnvironmentPostProcessor = com.borisov.howtodeservespring.infra.GodModeEPP
