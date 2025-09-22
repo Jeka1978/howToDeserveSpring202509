@@ -2,7 +2,7 @@ package com.borisov.howtodeservespring;
 
 
 import com.borisov.howtodeservespring.controller.DynamicSpiderController;
-import com.borisov.howtodeservespring.infra.CCL;
+import com.borisov.howtodeservespring.infra.DynamicSpiderClassLoader;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @Import({
-        CCL.class,
+        DynamicSpiderClassLoader.class,
         GameMaster.class,
         SpiderConfig.class,
         PaperSpider.class
